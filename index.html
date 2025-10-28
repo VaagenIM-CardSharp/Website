@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CardSharp — We build premium websites</title>
+    <link rel="stylesheet" href="/style/style2.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <header class="nav">
+        <div class="container nav__inner">
+            <a class="brand" href="#home" aria-label="CardSharp home">
+                <img src="/image/CardSharp_white_text_cropped (1).png" alt="CardSharp" class="brand__img" />
+            </a>
+
+            <nav class="nav__menu">
+                <a href="#home">Home</a>
+                <a href="#services">Services</a>
+                <a href="#work">Case Studies</a>
+                <a href="#process">How it Works</a>
+                <a href="#blog">Blog</a>
+                <a href="#contact">Contact</a>
+                <span class="nav__indicator" aria-hidden="true"></span>
+            </nav>
+
+            <a class="btn btn--primary btn--pulse" href="#contact">Get started</a>
+            <button class="nav__burger" aria-label="Menu"><span></span></button>
+        </div>
+    </header>
+
+    <main id="home">
+        <!-- HERO -->
+        <section class="hero">
+            <!-- fx canvas -->
+            <canvas id="fx"></canvas>
+
+            <div class="container hero__grid">
+                <div class="hero__copy reveal">
+                    <h1><span>WE BUILD WEBSITES</span></h1>
+                    <p>Premium websites & web apps — fast, secure and obsessively crafted for winning brands.</p>
+                    <div class="hero__cta">
+                        <a class="btn btn--primary btn--shine" href="#services">See services</a>
+                        <a class="btn btn--wine btn--shine" href="#work">View case studies</a>
+                    </div>
+                    <div class="hero__stats">
+                        <div class="chip chip--accent">Bespoke design</div>
+                        <div class="chip">Core Web Vitals 90+</div>
+                        <div class="chip chip--wine">Secure by design</div>
+                    </div>
+                </div>
+
+                <div class="hero__visual reveal">
+                    <div class="platform">
+                        <div class="ring ring--1"></div>
+                        <div class="ring ring--2"></div>
+                        <div class="ring ring--3"></div>
+                    </div>
+                    <svg class="shield" viewBox="0 0 200 240" aria-hidden="true">
+                        <defs>
+                            <linearGradient id="grad" x1="0" x2="1">
+                                <stop offset="0%" stop-color="#ff3355" />
+                                <stop offset="45%" stop-color="#7c4dff" />
+                                <stop offset="85%" stop-color="#00e5ff" />
+                            </linearGradient>
+                            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur stdDeviation="6" result="b" />
+                                <feMerge>
+                                    <feMergeNode in="b" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        <path
+                            d="M100 15 C130 28 160 34 185 38 184 114 165 170 100 210 35 170 16 114 15 38 40 34 70 28 100 15Z"
+                            fill="url(#grad)" opacity=".22" filter="url(#glow)" />
+                        <path
+                            d="M100 30 C125 41 148 46 170 50 169 112 153 158 100 191 47 158 31 112 30 50 52 46 75 41 100 30Z"
+                            fill="none" stroke="url(#grad)" stroke-width="3" />
+                        <path d="M74 110 a26 26 0 1 0 52 0 a26 26 0 1 0 -52 0" fill="none" stroke="url(#grad)"
+                            stroke-width="3" />
+                        <path d="M74 110 q26 -18 52 0" fill="none" stroke="url(#grad)" stroke-width="3" />
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICES -->
+        <section class="section" id="services">
+            <div class="container">
+                <h2 class="section__title reveal">Website Services</h2>
+                <div class="grid grid--cards">
+                    <article class="card reveal">
+                        <div class="card__badge">NEW</div>
+                        <i data-feather="layout"></i>
+                        <h3>Website Design</h3>
+                        <ul>
+                            <li>Brand-aligned UI/UX</li>
+                            <li>Responsive & accessible</li>
+                            <li>Design systems</li>
+                        </ul>
+                    </article>
+
+                    <article class="card reveal">
+                        <i data-feather="code"></i>
+                        <h3>Web Development</h3>
+                        <ul>
+                            <li>Next.js / React</li>
+                            <li>Headless CMS (Sanity, Strapi)</li>
+                            <li>Clean, tested code</li>
+                        </ul>
+                    </article>
+
+                    <article class="card reveal">
+                        <i data-feather="shopping-cart"></i>
+                        <h3>E-commerce</h3>
+                        <ul>
+                            <li>Headless storefronts</li>
+                            <li>Secure payments</li>
+                            <li>Integrations</li>
+                        </ul>
+                    </article>
+
+                    <article class="card reveal">
+                        <i data-feather="zap"></i>
+                        <h3>Performance & SEO</h3>
+                        <ul>
+                            <li>Core Web Vitals 90+</li>
+                            <li>SSR/ISR, caching</li>
+                            <li>Technical SEO</li>
+                        </ul>
+                    </article>
+
+                    <article class="card reveal">
+                        <i data-feather="cpu"></i>
+                        <h3>Animations & 3D</h3>
+                        <ul>
+                            <li>Three.js hero scenes</li>
+                            <li>Micro-interactions</li>
+                            <li>Lottie/GSAP</li>
+                        </ul>
+                    </article>
+
+                    <article class="card reveal">
+                        <i data-feather="life-buoy"></i>
+                        <h3>Support & Growth</h3>
+                        <ul>
+                            <li>Monitoring & updates</li>
+                            <li>A/B testing</li>
+                            <li>Roadmaps</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROCESS -->
+        <section class="section" id="process">
+            <div class="container">
+                <h2 class="section__title reveal">How it Works</h2>
+                <div class="grid grid--process">
+                    <article class="step reveal"><span>01</span>
+                        <h3>Discover</h3>
+                        <p>Audit, goals, scope and success metrics.</p>
+                    </article>
+                    <article class="step reveal"><span>02</span>
+                        <h3>Design</h3>
+                        <p>Wireframes → polished UI/UX in your brand.</p>
+                    </article>
+                    <article class="step reveal"><span>03</span>
+                        <h3>Build</h3>
+                        <p>Modern stack, clean code, integrations.</p>
+                    </article>
+                    <article class="step reveal"><span>04</span>
+                        <h3>Launch & Grow</h3>
+                        <p>Optimization, analytics, continuous releases.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="section cta" id="contact">
+            <div class="container cta__inner">
+                <div class="cta__copy reveal">
+                    <h2>Let’s build a winning website</h2>
+                    <p>Tell us about your product and we’ll craft a fast, secure and beautiful site customers love.</p>
+                    <div class="cta__actions">
+                        <a class="btn btn--primary btn--shine" href="#">Get a quote</a>
+                        <a class="btn btn--wine btn--shine" href="#">Book a discovery call</a>
+                    </div>
+                </div>
+                <div class="cta__card reveal">
+                    <div class="cta__badge">10x <span>faster delivery with our design system</span></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer__grid">
+            <div>
+                <img src="/image/CardSharp_white_text_cropped (1).png" alt="CardSharp"
+                    class="brand__img brand__img--footer" />
+                <p class="muted">Premium web engineering & design — performance, security, elegance.</p>
+            </div>
+            <nav>
+                <h4>Company</h4>
+                <a href="#">About</a><a href="#">Careers</a><a href="#">Press</a>
+            </nav>
+            <nav>
+                <h4>Services</h4>
+                <a href="#services">Websites</a><a href="#services">E-commerce</a><a href="#services">SEO</a>
+            </nav>
+            <nav>
+                <h4>Resources</h4>
+                <a href="#work">Case studies</a><a href="#blog">Blog</a><a href="#contact">Contact</a>
+            </nav>
+        </div>
+        <div class="container footer__bar">
+            <small>© 2025 CardSharp. All rights reserved.</small>
+            <div class="footer__links"><a href="#">Privacy</a><a href="#">Terms</a></div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>
