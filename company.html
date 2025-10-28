@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Company — CardSharp</title>
+  <link rel="stylesheet" href="/style/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav__inner">
+      <a class="brand" href="index.html#home"><img src="/image/CardSharp_white_text_cropped (1).png" alt="CardSharp" class="brand__img"/></a>
+      <nav class="nav__menu">
+        <a href="index.html#home">Home</a>
+        <a href="index.html#services">Services</a>
+        <a href="work.html">Case Studies</a>
+        <a href="company.html">Company</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+        <span class="nav__indicator"></span>
+      </nav>
+      <a class="btn btn--primary btn--pulse" href="contact.html">Get started</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" style="padding:96px 0 48px">
+      <canvas id="fx"></canvas>
+      <div class="container hero__grid">
+        <div class="hero__copy reveal">
+          <h1><span>DESIGN. BUILD. WIN.</span></h1>
+          <p>We are a web studio crafting fast, secure and beautiful websites that convert.</p>
+          <div class="hero__cta">
+            <a class="btn btn--primary btn--shine" href="work.html">See our results</a>
+            <a class="btn btn--wine btn--shine" href="contact.html">Hire the team</a>
+          </div>
+        </div>
+        <div class="hero__visual reveal">
+          <div class="platform"><div class="ring"></div><div class="ring ring--2"></div><div class="ring ring--3"></div></div>
+          <svg class="shield" viewBox="0 0 200 240" aria-hidden="true">
+            <defs><linearGradient id="grad" x1="0" x2="1"><stop offset="0%" stop-color="#ff3355"/><stop offset="45%" stop-color="#7c4dff"/><stop offset="85%" stop-color="#00e5ff"/></linearGradient></defs>
+            <path d="M100 30 C125 41 148 46 170 50 169 112 153 158 100 191 47 158 31 112 30 50 52 46 75 41 100 30Z" fill="none" stroke="url(#grad)" stroke-width="3"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALUES / APPROACH -->
+    <section class="section">
+      <div class="container grid" style="display:grid;grid-template-columns:1.2fr .8fr;gap:24px">
+        <div class="reveal">
+          <h2 class="section__title">Our approach</h2>
+          <div class="step"><span>01</span><h3>Strategy first</h3><p>Audit, goals, KPI. We only design what moves the metrics.</p></div>
+          <div class="step"><span>02</span><h3>Design systems</h3><p>Components & tokens for speed and consistency.</p></div>
+          <div class="step"><span>03</span><h3>Engineering</h3><p>Modern stack (React/Next.js), performance, security.</p></div>
+          <div class="step"><span>04</span><h3>Growth</h3><p>SEO, A/B tests, analytics, continuous improvements.</p></div>
+        </div>
+        <aside class="reveal">
+          <div class="card">
+            <h3>Why CardSharp</h3>
+            <ul>
+              <li>Brand-grade visuals + measurable speed</li>
+              <li>Web Vitals 90+ target by default</li>
+              <li>Clean code reviewed & tested</li>
+              <li>Clear timelines and reporting</li>
+            </ul>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <h3>Trusted by</h3>
+            <p class="muted">Startups, SMBs and enterprise teams across EU & US.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section cta">
+      <div class="container cta__inner">
+        <div class="cta__copy reveal">
+          <h2>Let’s build something bold</h2>
+          <p>Tell us about your product and goals — we’ll propose the fastest route to a winning site.</p>
+          <div class="cta__actions">
+            <a class="btn btn--primary btn--shine" href="contact.html">Get a quote</a>
+            <a class="btn btn--wine btn--shine" href="work.html">See case studies</a>
+          </div>
+        </div>
+        <div class="cta__card reveal"><div class="cta__badge">35+ <span>combined years of experience</span></div></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__bar"><small>© 2025 CardSharp.</small><div class="footer__links"><a href="#">Privacy</a><a href="#">Terms</a></div></div>
+  </footer>
+
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="index.js"></script>
+</body>
+</html>

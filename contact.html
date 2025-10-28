@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contact — CardSharp</title>
+  <link rel="stylesheet" href="index.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .form{max-width:820px;margin:0 auto}
+    .field{margin-bottom:14px}
+    .field label{display:block;margin-bottom:6px;color:#b7b9c9}
+    .input, .textarea{
+      width:100%; padding:12px 14px; border-radius:12px; border:1px solid #2a2a3a; background:#0b0b12; color:#fff;
+      transition:border-color .2s, box-shadow .2s;
+    }
+    .input:focus, .textarea:focus{ outline:none; border-color:#ff3355; box-shadow:0 0 0 4px rgba(255,51,85,.18)}
+    .error{color:#ff98a4;font-size:12px;margin-top:6px;display:none}
+    .ok{border-color:#2f7 !important}
+  </style>
+</head>
+<body>
+<header class="nav">
+  <div class="container nav__inner">
+    <a class="brand" href="index.html#home"><img src="assets/logo.png" class="brand__img" alt="CardSharp"></a>
+    <nav class="nav__menu">
+      <a href="index.html#home">Home</a>
+      <a href="index.html#services">Services</a>
+      <a href="work.html">Case Studies</a>
+      <a href="company.html">Company</a>
+      <a href="blog.html">Blog</a>
+      <a href="contact.html">Contact</a>
+      <span class="nav__indicator"></span>
+    </nav>
+    <a class="btn btn--primary btn--pulse" href="#form">Get a quote</a>
+  </div>
+</header>
+
+<main>
+  <section class="section" style="padding-top:96px">
+    <div class="container">
+      <h1 class="section__title reveal">Let’s talk</h1>
+      <p class="muted reveal">Tell us about your project — we reply within 24 hours.</p>
+
+      <form id="form" class="form reveal" novalidate>
+        <div class="field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" class="input" placeholder="Jane Doe" required />
+          <div class="error">Please enter your name</div>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" class="input" placeholder="you@company.com" required />
+          <div class="error">Please enter a valid email</div>
+        </div>
+        <div class="field">
+          <label for="budget">Budget (optional)</label>
+          <input id="budget" name="budget" class="input" placeholder="$5k–$30k" />
+        </div>
+        <div class="field">
+          <label for="msg">Project details</label>
+          <textarea id="msg" name="message" class="textarea" rows="6" placeholder="We need a fast ecommerce site with custom design..." required></textarea>
+          <div class="error">Tell us a bit about your project</div>
+        </div>
+        <button class="btn btn--primary btn--shine" type="submit">Send message</button>
+        <button class="btn btn--wine btn--shine" type="button" onclick="location.href='work.html'">See case studies</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer__bar"><small>© 2025 CardSharp.</small><div class="footer__links"><a href="#">Privacy</a><a href="#">Terms</a></div></div>
+</footer>
+
+<script src="https://unpkg.com/feather-icons"></script>
+<script src="index.js"></script>
+<script>
+  // simple validation
+  const f = document.getElementById('form');
+  f.addEventListener('submit', e=>{
+    e.preventDefault();
+    let ok = true;
+    const name = f.name, email = f.email, msg = f.message;
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+    [[name, name.nextElementSibling],[email, email.nextElementSibling],[msg, msg.nextElementSibling]].forEach(([el,err])=>{
+      const valid = el.value.trim() && (el!==email || emailOk);
+      err.style.display = valid ? 'none' : 'block';
+      el.classList.toggle('ok', valid);
+      if(!valid) ok=false;
+    });
+    if(ok){
+      alert('Thanks! We\'ll get back to you within 24 hours.'); // replace with real submit
+      f.reset();
+    }
+  });
+</script>
+</body>
+</html>
