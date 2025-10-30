@@ -1,101 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Company — CardSharp</title>
-  <link rel="stylesheet" href="/style/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CardSharp — About / Company</title>
+ <link rel="stylesheet" href="/style/company.css" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+
 </head>
 <body>
-  <header class="nav">
-    <div class="container nav__inner">
-      <a class="brand" href="index.html#home"><img src="/image/CardSharp_white_text_cropped (1).png" alt="CardSharp" class="brand__img"/></a>
-      <nav class="nav__menu">
-        <a href="index.html#home">Home</a>
-        <a href="index.html#services">Services</a>
-        <a href="work.html">Case Studies</a>
-        <a href="company.html">Company</a>
-        <a href="blog.html">Blog</a>
-        <a href="contact.html">Contact</a>
-        <span class="nav__indicator"></span>
-      </nav>
-      <a class="btn btn--primary btn--pulse" href="contact.html">Get started</a>
+<!-- Background layers -->
+<div class="bg"></div>
+<canvas id="droplets"></canvas>
+
+<!-- Navbar -->
+<header class="nav">
+        <div class="container nav__inner">
+            <a class="brand" href="#home" aria-label="CardSharp home">
+                <img src="/image/CardSharp_white_text_cropped (1).png" alt="CardSharp" class="brand__img" />
+            </a>
+
+            <nav class="nav__menu">
+                <a href="#home">Home</a>
+                <a href="#services">Services</a>
+                <a href="work.html">Case Studies</a>
+                <a href="company.html">Company</a> 
+                <a href="#blog">Blog</a>
+                <a href="#contact">Contact</a>
+                <span class="nav__indicator" aria-hidden="true"></span>
+            </nav>
+
+            <a class="btn btn--primary btn--pulse btn--primary btn--shine" href="#contact">Get started</a>
+            <button class="nav__burger" aria-label="Menu"><span></span></button>
+        </div>
+    </header>
+
+<!-- HERO -->
+<section class="hero container">
+  <h1>About CardSharp</h1>
+  <p>
+    We’re a small senior studio that builds premium websites and web apps for ambitious brands.
+    Our craft blends brand-aligned UI, reliable engineering and measurable performance.
+  </p>
+  <div class="actions">
+    <a class="btn btn--primary btn--shine" href="contact.html">Start a project</a>
+    <a class="btn btn--ghost" href="work.html">See case studies</a>
+  </div>
+</section>
+
+<!-- Mission / Vision (lots of text) -->
+<section class="container text-grid">
+  <article class="card reveal">
+    <h2>Who we are</h2>
+    <p>CardSharp is a team of designers and engineers focused on building fast, secure and elegant websites. We believe that premium quality is a combination of details — clear design systems, accessible interfaces, predictable code and reliable hosting.</p>
+    <p>Our clients choose us when deadlines are tight and quality cannot slip. We optimize Core Web Vitals, ship readable, tested code and provide post-launch care with monitoring, backups and analytics.</p>
+  </article>
+  <article class="card reveal">
+    <h2>How we work</h2>
+    <p>We start with a discovery call and a short audit of your goals, users and competition. Then we propose a scope, timeline and budget. We deliver in sprints with transparent weekly updates and demos. We value smart constraints, straightforward communication and long-term partnerships.</p>
+    <p>Our stack includes Next.js/React, Headless CMS (Sanity, Strapi), Cloudflare/Vercel, Node and Postgres. We integrate payment, authentication, analytics and marketing tools — without vendor lock-in.</p>
+  </article>
+</section>
+
+<!-- KPI panel + Donuts -->
+<section class="container panel reveal" aria-label="KPI tracking">
+  <div class="panel__head">
+    <div>
+      <div class="tiny">Tracking</div>
+      <div class="panel__title">Weekly Delivery & Quality</div>
     </div>
-  </header>
+    <div class="panel__meta">
+      <div><span class="meta-k">Completed</span><span class="meta-v">347</span></div>
+      <div><span class="meta-k">Total</span><span class="meta-v">960</span></div>
+      <div><span class="meta-k">Monthly Avg</span><span class="meta-v">248.6</span></div>
+    </div>
+  </div>
 
-  <main>
-    <!-- HERO -->
-    <section class="hero" style="padding:96px 0 48px">
-      <canvas id="fx"></canvas>
-      <div class="container hero__grid">
-        <div class="hero__copy reveal">
-          <h1><span>DESIGN. BUILD. WIN.</span></h1>
-          <p>We are a web studio crafting fast, secure and beautiful websites that convert.</p>
-          <div class="hero__cta">
-            <a class="btn btn--primary btn--shine" href="work.html">See our results</a>
-            <a class="btn btn--wine btn--shine" href="contact.html">Hire the team</a>
-          </div>
-        </div>
-        <div class="hero__visual reveal">
-          <div class="platform"><div class="ring"></div><div class="ring ring--2"></div><div class="ring ring--3"></div></div>
-          <svg class="shield" viewBox="0 0 200 240" aria-hidden="true">
-            <defs><linearGradient id="grad" x1="0" x2="1"><stop offset="0%" stop-color="#ff3355"/><stop offset="45%" stop-color="#7c4dff"/><stop offset="85%" stop-color="#00e5ff"/></linearGradient></defs>
-            <path d="M100 30 C125 41 148 46 170 50 169 112 153 158 100 191 47 158 31 112 30 50 52 46 75 41 100 30Z" fill="none" stroke="url(#grad)" stroke-width="3"/>
-          </svg>
-        </div>
+  <div class="kpi-row">
+    <!-- Donut 1 -->
+    <figure class="donut" data-value="30">
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <linearGradient id="gPink" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ff3355"/>
+            <stop offset="100%" stop-color="#ff9ecb"/>
+          </linearGradient>
+        </defs>
+        <circle class="ring" cx="60" cy="60" r="50"/>
+        <circle class="bar" cx="60" cy="60" r="50" stroke="url(#gPink)"/>
+      </svg>
+      <figcaption>
+        <strong class="donut__num">0%</strong>
+        <span class="donut__label">New tasks</span>
+      </figcaption>
+    </figure>
+
+    <!-- Donut 2 -->
+    <figure class="donut" data-value="80">
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <linearGradient id="gCyan" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#00e5ff"/>
+            <stop offset="100%" stop-color="#7c4dff"/>
+          </linearGradient>
+        </defs>
+        <circle class="ring" cx="60" cy="60" r="50"/>
+        <circle class="bar" cx="60" cy="60" r="50" stroke="url(#gCyan)"/>
+      </svg>
+      <figcaption>
+        <strong class="donut__num">0%</strong>
+        <span class="donut__label">Progress</span>
+      </figcaption>
+    </figure>
+
+    <!-- Donut 3 -->
+    <figure class="donut" data-value="50">
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <linearGradient id="gSun" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffb347"/>
+            <stop offset="100%" stop-color="#ff5470"/>
+          </linearGradient>
+        </defs>
+        <circle class="ring" cx="60" cy="60" r="50"/>
+        <circle class="bar" cx="60" cy="60" r="50" stroke="url(#gSun)"/>
+      </svg>
+      <figcaption>
+        <strong class="donut__num">0%</strong>
+        <span class="donut__label">Recurring</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- Stats (counters) -->
+<section class="container">
+  <h2>Stats at a glance</h2>
+  <div class="stats">
+    <article class="stat reveal">
+      <h3 class="count" data-to="184">0</h3>
+      <p>Завершені проєкти</p>
+    </article>
+    <article class="stat reveal">
+      <h3 class="count" data-to="97">0</h3>
+      <p>Задоволені клієнти (%)</p>
+    </article>
+    <article class="stat reveal">
+      <h3 class="count" data-to="4.9">0</h3>
+      <p>Середній рейтинг (із 5)</p>
+    </article>
+    <article class="stat reveal">
+      <h3 class="count" data-to="23">0</h3>
+      <p>Активні контракти</p>
+    </article>
+  </div>
+</section>
+
+<!-- Team (5 people) -->
+<section class="container">
+  <h2>Our team</h2>
+  <div class="team">
+    <article class="member reveal" data-id="alex">
+      <img src="/image/worker2.jpg" alt="Alex — Lead Designer">
+      <div class="info"><h3>Alex Romanov</h3><div class="role">Lead Designer</div></div>
+    </article>
+    <article class="member reveal" data-id="kate">
+      <img src="/image/worker_1.jpg" alt="Kate — Frontend Engineer">
+      <div class="info"><h3>Kate Moroz</h3><div class="role">Frontend Engineer</div></div>
+    </article>
+    <article class="member reveal" data-id="daniel">
+      <img src="/image/worker4.jpg" alt="Daniel — Tech Lead">
+      <div class="info"><h3>Daniel Strauss</h3><div class="role">Tech Lead</div></div>
+    </article>
+    <article class="member reveal" data-id="sofia">
+      <img src="/image/worker3.jpg" alt="Sofia — Project Manager">
+      <div class="info"><h3>Sofia Lemberg</h3><div class="role">Project Manager</div></div>
+    </article>
+    <article class="member reveal" data-id="max">
+      <img src="/image/worker5.jpg" alt="Max — Backend Engineer">
+      <div class="info"><h3>Max Chen</h3><div class="role">Backend Engineer</div></div>
+    </article>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="container cta reveal">
+  <h2>Become our client</h2>
+  <p>We’ll audit your goals, propose a clear roadmap and build a site that’s fast, secure and brand-aligned.</p>
+  <a class="btn btn--primary btn--shine" href="contact.html">Get a proposal</a>
+</section>
+
+<!-- Footer -->
+<footer>
+  © 2025 CardSharp — premium web experiences. Privacy · Terms
+</footer>
+
+<!-- Team modal -->
+<div class="modal" id="teamModal" aria-hidden="true" role="dialog" aria-label="Team details">
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__card">
+    <button class="modal__close" data-close>&times;</button>
+    <div class="modal__grid">
+      <img class="modal__avatar" id="mAvatar" alt="">
+      <div>
+        <h2 id="mName"></h2>
+        <p id="mRole" style="color:#b7b9c9;margin:.25rem 0  .5rem"></p>
+        <p id="mBio"></p>
+        <div class="skill-tags" id="mTags"></div>
       </div>
-    </section>
+    </div>
+  </div>
+</div>
 
-    <!-- VALUES / APPROACH -->
-    <section class="section">
-      <div class="container grid" style="display:grid;grid-template-columns:1.2fr .8fr;gap:24px">
-        <div class="reveal">
-          <h2 class="section__title">Our approach</h2>
-          <div class="step"><span>01</span><h3>Strategy first</h3><p>Audit, goals, KPI. We only design what moves the metrics.</p></div>
-          <div class="step"><span>02</span><h3>Design systems</h3><p>Components & tokens for speed and consistency.</p></div>
-          <div class="step"><span>03</span><h3>Engineering</h3><p>Modern stack (React/Next.js), performance, security.</p></div>
-          <div class="step"><span>04</span><h3>Growth</h3><p>SEO, A/B tests, analytics, continuous improvements.</p></div>
-        </div>
-        <aside class="reveal">
-          <div class="card">
-            <h3>Why CardSharp</h3>
-            <ul>
-              <li>Brand-grade visuals + measurable speed</li>
-              <li>Web Vitals 90+ target by default</li>
-              <li>Clean code reviewed & tested</li>
-              <li>Clear timelines and reporting</li>
-            </ul>
-          </div>
-          <div class="card" style="margin-top:16px">
-            <h3>Trusted by</h3>
-            <p class="muted">Startups, SMBs and enterprise teams across EU & US.</p>
-          </div>
-        </aside>
-      </div>
-    </section>
+<script>
+/* =================== Neon droplets background (canvas) =================== */
+(function(){
+  const c = document.getElementById('droplets');
+  const ctx = c.getContext('2d');
+  let W=innerWidth, H=innerHeight, drops=[];
+  function resize(){W=innerWidth;H=innerHeight;c.width=W;c.height=H}
+  addEventListener('resize',resize,{passive:true}); resize();
 
-    <!-- CTA -->
-    <section class="section cta">
-      <div class="container cta__inner">
-        <div class="cta__copy reveal">
-          <h2>Let’s build something bold</h2>
-          <p>Tell us about your product and goals — we’ll propose the fastest route to a winning site.</p>
-          <div class="cta__actions">
-            <a class="btn btn--primary btn--shine" href="contact.html">Get a quote</a>
-            <a class="btn btn--wine btn--shine" href="work.html">See case studies</a>
-          </div>
-        </div>
-        <div class="cta__card reveal"><div class="cta__badge">35+ <span>combined years of experience</span></div></div>
-      </div>
-    </section>
-  </main>
+  const COLORS=[
+    {r:255,g:51,b:85},   // red
+    {r:124,g:77,b:255},  // purple
+    {r:0,g:229,b:255}    // cyan
+  ];
+  function spawn(){
+    const col = COLORS[Math.floor(Math.random()*COLORS.length)];
+    return {
+      x: Math.random()*W,
+      y: -40 - Math.random()*H,
+      r: 8 + Math.random()*18,
+      vy: 0.6 + Math.random()*1.4,
+      col
+    };
+  }
+  for(let i=0;i<90;i++) drops.push(spawn());
 
-  <footer class="footer">
-    <div class="container footer__bar"><small>© 2025 CardSharp.</small><div class="footer__links"><a href="#">Privacy</a><a href="#">Terms</a></div></div>
-  </footer>
+  function drawDrop(d){
+    const g = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r*3);
+    g.addColorStop(0, `rgba(${d.col.r},${d.col.g},${d.col.b},.9)`);
+    g.addColorStop(.5, `rgba(${d.col.r},${d.col.g},${d.col.b},.25)`);
+    g.addColorStop(1, `rgba(${d.col.r},${d.col.g},${d.col.b},0)`);
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(d.x,d.y,d.r*3,0,Math.PI*2); ctx.fill();
+  }
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    drops.forEach(d=>{
+      d.y += d.vy; if(d.y - d.r > H+40){ d.x=Math.random()*W; d.y=-40; }
+      drawDrop(d);
+    });
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
 
-  <script src="https://unpkg.com/feather-icons"></script>
-  <script src="index.js"></script>
+/* =================== Scroll reveal =================== */
+(function(){
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('show'); obs.unobserve(e.target); }
+    });
+  },{threshold:.25});
+  document.querySelectorAll('.reveal, .card, .stat, .member, .cta').forEach(el=>obs.observe(el));
+})();
+
+/* =================== Counters =================== */
+(function(){
+  const els = document.querySelectorAll('.count');
+  const io = new IntersectionObserver(items=>{
+    items.forEach(it=>{
+      if(!it.isIntersecting) return;
+      const el = it.target; io.unobserve(el);
+      const to = parseFloat(el.dataset.to);
+      const dur = 1300; const start = performance.now();
+      const isFloat = (to%1!==0);
+      function step(t){
+        const p = Math.min(1,(t-start)/dur);
+        const val = to*p;
+        el.textContent = isFloat ? val.toFixed(1) : Math.round(val);
+        if(p<1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  },{threshold:.6});
+  els.forEach(e=>io.observe(e));
+})();
+
+/* =================== Donut charts =================== */
+(function(){
+  const donuts = document.querySelectorAll('.donut');
+  const C = 2*Math.PI*50; // r=50
+  donuts.forEach(d=>{
+    const target = parseFloat(d.dataset.value || '0');
+    const bar = d.querySelector('.bar');
+    const num = d.querySelector('.donut__num');
+    bar.style.strokeDasharray = C;
+    bar.style.strokeDashoffset = C;
+    const io = new IntersectionObserver(items=>{
+      items.forEach(it=>{
+        if(!it.isIntersecting) return;
+        io.unobserve(d);
+        const start = performance.now();
+        const dur = 1300;
+        function animate(t){
+          const p = Math.min(1,(t-start)/dur);
+          const off = C*(1 - (target/100)*p);
+          bar.style.strokeDashoffset = off;
+          num.textContent = Math.round(target*p) + "%";
+          if(p<1) requestAnimationFrame(animate);
+        }
+        requestAnimationFrame(animate);
+      });
+    },{threshold:.6});
+    io.observe(d);
+  });
+})();
+
+/* =================== Team modal =================== */
+(function(){
+  const DATA = {
+    alex:  { name:"Alex Romanov",  role:"Lead Designer",
+      avatar:"https://i.pinimg.com/736x/d1/81/e4/d181e44cf0a7d5f9190bc96939da4164.jpg",
+      bio:"Brand-aligned UI, design systems, motion. Loves clean grids and micro-interactions. Ex-agency art-director with 9+ years in digital.",
+      tags:["Design systems","Figma","Motion","A11y","Atomic design"] },
+    kate:  { name:"Kate Moroz",    role:"Frontend Engineer",
+      avatar:"https://i.pinimg.com/736x/d1/81/e4/d181e44cf0a7d5f9190bc96939da4164.jpg",
+      bio:"Next.js/React expert. Ships clean, tested code with focus on Web Vitals. Builds delightful UI with performance in mind.",
+      tags:["React/Next.js","TypeScript","GSAP","Vite","PWAs"] },
+    daniel:{ name:"Daniel Strauss",role:"Tech Lead",
+      avatar:"https://i.pinimg.com/1200x/b8/82/83/b882836fa749f501aefa935d19e19977.jpg",
+      bio:"Architects scalable solutions, API design, CI/CD. Obsessed with reliability, security and monitoring.",
+      tags:["Node","Postgres","Security","CI/CD","Cloudflare"] },
+    sofia: { name:"Sofia Lemberg", role:"Project Manager",
+      avatar:"https://i.pinimg.com/736x/74/67/89/7467896e13124e10075481bf1b99286f.jpg",
+      bio:"Keeps projects predictable and teams happy. Transparent roadmaps, weekly demos and risk management.",
+      tags:["Scrum","Roadmaps","Analytics","QA","Stakeholder comms"] },
+    max:   { name:"Max Chen",      role:"Backend Engineer",
+      avatar:"https://i.pinimg.com/736x/60/f9/ad/60f9adb37ead17c22c5d130e3eb47158.jpg",
+      bio:"Builds secure APIs, payments and integrations. Loves performance profiling and database tuning.",
+      tags:["Node","Stripe","Auth","Caching","DB tuning"] }
+  };
+
+  const modal = document.getElementById('teamModal');
+  const mAvatar = document.getElementById('mAvatar');
+  const mName = document.getElementById('mName');
+  const mRole = document.getElementById('mRole');
+  const mBio  = document.getElementById('mBio');
+  const mTags = document.getElementById('mTags');
+
+  function open(id){
+    const d = DATA[id]; if(!d) return;
+    mAvatar.src = d.avatar; mAvatar.alt = d.name;
+    mName.textContent = d.name; mRole.textContent = d.role; mBio.textContent = d.bio;
+    mTags.innerHTML = ""; d.tags.forEach(t=>{ const s=document.createElement('span'); s.className='tag'; s.textContent=t; mTags.appendChild(s); });
+    modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+  }
+  function close(){
+    modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
+  }
+  document.querySelectorAll('.member').forEach(el=>{
+    el.addEventListener('click',()=>open(el.dataset.id));
+  });
+  modal.addEventListener('click',e=>{ if(e.target.hasAttribute('data-close')) close(); });
+  addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
+})();
+</script>
+<script src="index.js"></script>
 </body>
 </html>
