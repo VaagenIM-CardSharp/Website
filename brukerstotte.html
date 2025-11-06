@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CardSharp — Support / Help Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="/style/brukerstotte.css" rel="stylesheet">
+</head>
+<body>
+<div class="bg"></div>
+
+<!-- NAVBAR (same as other pages) -->
+<header class="nav">
+  <div class="container nav__inner">
+    <a class="brand" href="index.html#home" aria-label="CardSharp home"><img src="/image/CardSharp_white_text_cropped (1).png" alt="CardSharp" class="brand__img"/></a>
+    <nav class="nav__menu">
+      <a href="index.html#home">Home</a>
+      <a href="index.html#services">Services</a>
+      <a href="work.html">Case Studies</a>
+      <a href="company.html">Company</a>
+      <a href="brukerstotte.html">Help</a>
+      <a href="contact.html">Contact</a>
+      <span class="nav__indicator" aria-hidden="true"></span>
+    </nav>
+    <a class="btn btn--primary btn--pulse" href="contact.html">Get started</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<header class="hero container">
+  <h1>Support & Help Center</h1>
+  <p>Find step-by-step answers to the most common questions about deploys, billing, SEO, and security.
+     Use the quick search or filter by topic. Click a question to reveal the full guide.</p>
+
+  <div class="controls">
+    <div class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" stroke="#9aa1b7" stroke-width="2"/><path d="M20 20L17 17" stroke="#9aa1b7" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <input id="search" type="search" placeholder="Search questions… (e.g. DNS, deploy, Stripe, sitemap)">
+      <button class="small-btn" id="clear">Clear</button>
+    </div>
+    <button class="tag active" data-tag="all">All</button>
+    <button class="tag" data-tag="deploy">Deploy</button>
+    <button class="tag" data-tag="billing">Billing</button>
+    <button class="tag" data-tag="seo">SEO</button>
+    <button class="tag" data-tag="security">Security</button>
+    <button class="small-btn" id="expandAll">Expand all</button>
+    <button class="small-btn" id="collapseAll">Collapse all</button>
+  </div>
+</header>
+
+<main class="container">
+  <!-- DEPLOY -->
+  <section class="faq group" data-group="deploy">
+    <div class="group__head"><span class="group__dot"></span><div class="group__title">Deployment & Hosting</div></div>
+
+    <div class="item" data-tags="deploy">
+      <button aria-expanded="false" aria-controls="a1" id="q1">
+        <span>How do I deploy a Next.js site to Vercel / Cloudflare Pages?</span>
+        <span class="arrow">➤</span>
+      </button>
+      <div class="answer" id="a1" role="region" aria-labelledby="q1">
+        <p><strong>Summary:</strong> connect your Git repo, configure env vars, and let the platform build & atomically release.</p>
+        <ol class="step">
+          <li><strong>Connect repository:</strong> push your code to GitHub/GitLab, then import the repo in Vercel / Cloudflare Pages.</li>
+          <li><strong>Framework preset:</strong> choose <em>Next.js</em>. The default build command is <code>next build</code>.</li>
+          <li><strong>Environment variables:</strong> add keys under <em>Project → Settings → Environment Variables</em> (e.g. <code>NEXT_PUBLIC_API_URL</code>, <code>STRIPE_SECRET_KEY</code>).</li>
+          <li><strong>Images & domains:</strong> in <code>next.config.js</code> set <code>images.domains</code> for external images.</li>
+          <li><strong>Custom domain:</strong> add your domain in <em>Domains</em>, then update DNS (CNAME/A/AAAA) at your registrar.</li>
+          <li><strong>Preview & production:</strong> every pull request gets a preview URL; merge to <code>main</code> publishes production instantly (atomic deploy).</li>
+        </ol>
+        <pre><code># Example: next.config.js (images)
+module.exports = {
+  images: { domains: ["cdn.yoursite.com","images.unsplash.com"] }
+};</code></pre>
+      </div>
+    </div>
+
+    <div class="item" data-tags="deploy">
+      <button aria-expanded="false" aria-controls="a2" id="q2">
+        <span>Zero-downtime updates — how do we ship safely?</span><span class="arrow">➤</span>
+      </button>
+      <div class="answer" id="a2" role="region" aria-labelledby="q2">
+        <ol class="step">
+          <li>Create a feature branch → open a Pull Request.</li>
+          <li>Preview deploy is generated automatically; QA on the preview URL.</li>
+          <li>After review, <strong>merge to <code>main</code></strong> — the platform promotes the build atomically.</li>
+          <li>Previous version remains available for instant rollback if needed.</li>
+          <li>We monitor Core Web Vitals and error logs post-release for 24–48h.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- BILLING -->
+  <section class="faq group" data-group="billing">
+    <div class="group__head"><span class="group__dot"></span><div class="group__title">Billing & Payments (Stripe)</div></div>
+
+    <div class="item" data-tags="billing">
+      <button aria-expanded="false" aria-controls="b1" id="q3">
+        <span>How to test Stripe payments with webhooks?</span><span class="arrow">➤</span>
+      </button>
+      <div class="answer" id="b1" role="region" aria-labelledby="q3">
+        <p>Use Stripe’s test cards and Webhook endpoints to simulate the full payment lifecycle.</p>
+        <ol class="step">
+          <li>Enable <strong>Test mode</strong> in the Stripe Dashboard.</li>
+          <li>Use card <code>4242 4242 4242 4242</code>, any future expiry, any CVC.</li>
+          <li>Create a <strong>Webhook endpoint</strong> (e.g. <code>/api/stripe/webhook</code>) and subscribe to events:
+              <code>payment_intent.succeeded</code>, <code>payment_intent.payment_failed</code>, <code>checkout.session.completed</code>.</li>
+          <li>Copy the Signing secret into your environment variable (e.g. <code>STRIPE_WEBHOOK_SECRET</code>).</li>
+          <li>Verify signature on your server using Stripe SDK before processing the event.</li>
+        </ol>
+        <pre><code>// Example (Node/Express)
+app.post("/api/stripe/webhook", express.raw({type:"application/json"}), (req,res)=>{
+  const sig = req.headers["stripe-signature"];
+  const event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  if(event.type==="checkout.session.completed"){ /* fulfill order */ }
+  res.json({received:true});
+});</code></pre>
+      </div>
+    </div>
+
+    <div class="item" data-tags="billing">
+      <button aria-expanded="false" aria-controls="b2" id="q4">
+        <span>Refunds and partial refunds best-practice</span><span class="arrow">➤</span>
+      </button>
+      <div class="answer" id="b2" role="region" aria-labelledby="q4">
+        <ol class="step">
+          <li>Issue a full or partial refund in Dashboard or via API (store the reason).</li>
+          <li>Listen to <code>charge.refunded</code> / <code>refund.updated</code> to sync your order status.</li>
+          <li>Notify the customer by email; funds may take 5–10 business days to appear.</li>
+          <li>For subscriptions, consider proration or credit balance instead of immediate refunds.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEO -->
+  <section class="faq group" data-group="seo">
+    <div class="group__head"><span class="group__dot"></span><div class="group__title">SEO & Performance</div></div>
+
+    <div class="item" data-tags="seo">
+      <button aria-expanded="false" aria-controls="c1" id="q5">
+        <span>Fixing LCP/CLS spikes — practical checklist</span><span class="arrow">➤</span>
+      </button>
+      <div class="answer" id="c1" role="region" aria-labelledby="q5">
+        <ol class="step">
+          <li><strong>Hero media:</strong> serve optimized images/video; use <code>priority</code> on the hero image.</li>
+          <li><strong>Fonts:</strong> self-host with <code>font-display: swap</code>; preconnect & preload critical fonts.</li>
+          <li><strong>Layout shifts:</strong> reserve width/height for images, ads, embeds; avoid late DOM injection.</li>
+          <li><strong>JS budget:</strong> lazy-load non-critical scripts; remove unused libraries; prefer native features.</li>
+          <li><strong>CDN cache:</strong> cache HTML for anonymous traffic; enable HTTP/3 and brotli; set proper cache keys.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="item" data-tags="seo">
+      <button aria-expanded="false" aria-controls="c2" id="q6">
+        <span>Sitemaps, robots, canonicals & hreflang</span><span class="arrow">➤</span>
+      </button>
+      <div class="answer" id="c2" role="region" aria-labelledby="q6">
+        <ol class="step">
+          <li>Generate <code>sitemap.xml</code> on build (e.g. next-sitemap) and submit it in Google Search Console.</li>
+          <li>Add <code>robots.txt</code> to allow crawling of production and disallow staging environments.</li>
+          <li>For each canonical page, include <code>&lt;link rel="canonical" href="https://example.com/page"/&gt;</code>.</li>
+          <li>For multilingual sites, include <code>hreflang</code> links pointing to language/region variants.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECURITY -->
+  <section class="faq group" data-group="security">
+    <div class="group__head"><span class="group__dot"></span><div class="group__title">Security</div></div>
+
+    <div class="item" data-tags="security">
+      <button aria-expanded="false" aria-controls="d1" id="q7">
+        <span>Protecting the admin/CMS area — our policy</span><span class="arrow">➤</span>
+      </button>
+      <div class="answer" id="d1" role="region" aria-labelledby="q7">
+        <ol class="step">
+          <li>Enable <strong>2FA</strong>, strong password policy, session timeouts, and IP allow-listing for staff.</li>
+          <li>Run the CMS on a separate subdomain with HTTPS only; set strict <code>SameSite</code> and <code>HttpOnly</code> cookies.</li>
+          <li>Apply <strong>rate limiting</strong> and login attempt throttling; log all admin actions centrally.</li>
+          <li>Automated nightly backups; secrets only in managed <strong>ENV</strong> (no secrets in git).</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="item" data-tags="security">
+      <button aria-expanded="false" aria-controls="d2" id="q8">
+        <span>Content-Security-Policy (CSP) essentials</span><span class="arrow">➤</span>
+      </button>
+      <div class="answer" id="d2" role="region" aria-labelledby="q8">
+        <p>Use a strict CSP with a controlled allow-list for scripts/styles/fonts/images. Prefer nonces or hashes for inline code.</p>
+        <pre><code>Content-Security-Policy:
+  default-src 'self';
+  script-src 'self' 'nonce-&lt;GENERATED_NONCE&gt;' https://www.googletagmanager.com;
+  style-src  'self' 'unsafe-inline' https://fonts.googleapis.com;
+  img-src    'self' data: https://images.unsplash.com;
+  font-src   'self' https://fonts.gstatic.com;
+  frame-ancestors 'none';</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta">
+    <strong>Didn’t find what you need?</strong>
+    <p class="muted">Send us your question and we’ll reply within 24 hours.</p>
+    <a class="cs-cta" href="contact.html#contact">Contact support</a>
+  </div>
+</main>
+
+<footer>© 2025 CardSharp • Support</footer>
+
+<script>
+/* ---- Accordion open/close ---- */
+// ---- Improved accordion (no clipping) ----
+document.querySelectorAll('.item > button').forEach(btn => {
+  const panel = document.getElementById(btn.getAttribute('aria-controls'));
+
+  function openPanel(){
+    btn.setAttribute('aria-expanded','true');
+    panel.classList.add('open');
+    panel.style.maxHeight = 'none';
+    const h = panel.scrollHeight;
+    panel.style.maxHeight = '0px';
+    requestAnimationFrame(()=>{ panel.style.maxHeight = h + 'px'; });
+    panel.addEventListener('transitionend',()=>{ panel.style.maxHeight = 'none'; },{once:true});
+  }
+
+  function closePanel(){
+    btn.setAttribute('aria-expanded','false');
+    panel.style.maxHeight = panel.scrollHeight + 'px';
+    requestAnimationFrame(()=>{ panel.style.maxHeight = '0px'; });
+    panel.addEventListener('transitionend',()=>{
+      panel.classList.remove('open');
+      panel.style.maxHeight = '';          // важливо: прибираємо інлайн-стиль
+    },{once:true});
+  }
+
+  btn.addEventListener('click', ()=>{
+    (btn.getAttribute('aria-expanded')==='true') ? closePanel() : openPanel();
+  });
+});
+
+/* ---- Expand / Collapse all ---- */
+document.getElementById('expandAll').addEventListener('click',()=>{
+  document.querySelectorAll('.item > button').forEach(b=>{
+    if(b.getAttribute('aria-expanded')!=='true') b.click();
+  });
+});
+document.getElementById('collapseAll').addEventListener('click',()=>{
+  document.querySelectorAll('.item > button').forEach(b=>{
+    if(b.getAttribute('aria-expanded')==='true') b.click();
+  });
+});
+
+/* ---- Search ---- */
+const qInput = document.getElementById('search');
+const clearBtn = document.getElementById('clear');
+function applySearch(){
+  const q = qInput.value.toLowerCase().trim();
+  document.querySelectorAll('.item').forEach(item=>{
+    const text = item.querySelector('button span').textContent.toLowerCase();
+    item.classList.toggle('hide', q && !text.includes(q));
+  });
+}
+qInput.addEventListener('input',applySearch);
+clearBtn.addEventListener('click',()=>{qInput.value='';applySearch();qInput.focus();});
+
+/* ---- Tag filter ---- */
+let activeTag = 'all';
+document.querySelectorAll('.tag').forEach(tag=>{
+  tag.addEventListener('click',()=>{
+    document.querySelectorAll('.tag').forEach(t=>t.classList.remove('active'));
+    tag.classList.add('active');
+    activeTag = tag.dataset.tag;
+    document.querySelectorAll('.group, .item').forEach(el=>{
+      if(activeTag==='all'){ el.classList.remove('hide'); return; }
+      if(el.classList.contains('group')){
+        const any = el.querySelector(`.item[data-tags*="${activeTag}"]`);
+        el.classList.toggle('hide', !any);
+      }else{
+        el.classList.toggle('hide', !el.dataset.tags.includes(activeTag));
+      }
+    });
+  });
+});
+
+/* ---- Deep link open (#id) ---- */
+if(location.hash){
+  const target = document.querySelector(location.hash);
+  if(target){
+    const btn = document.querySelector(`button[aria-controls="${target.id}"]`);
+    if(btn && btn.getAttribute('aria-expanded')!=='true'){ btn.click(); }
+    setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'center'}),150);
+  }
+}
+</script>
+</body>
+</html>
