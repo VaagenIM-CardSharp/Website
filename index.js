@@ -90,3 +90,26 @@ feather.replace();
 })();
 
 
+  (function(){
+    const burger = document.querySelector('.nav__burger, .nav_burger');
+    const menu   = document.querySelector('.nav_menu, .nav__menu');
+    if (!burger || !menu) return;
+
+    let overlay = document.querySelector('.nav__overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.className = 'nav__overlay';
+      document.body.appendChild(overlay);
+    }
+
+    function openMenu(on) {
+      burger.setAttribute('aria-expanded', String(on));
+      menu.classList.toggle('open', on);
+      overlay.classList.toggle('show', on);
+    }
+
+    burger.addEventListener('click', () => openMenu(!menu.classList.contains('open')));
+    overlay.addEventListener('click', () => openMenu(false));
+    window.addEventListener('keydown', e => { if (e.key === 'Escape') openMenu(false); });
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => openMenu(false)));
+  })();
