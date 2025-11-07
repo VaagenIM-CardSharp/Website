@@ -208,6 +208,28 @@
             background: linear-gradient(135deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .04));
             border-bottom-right-radius: 6px;
         }
+
+        /* нормальна колонка для повідомлень — без розтягування */
+.thread{
+  display: flex !important;       /* переважує будь-які глобальні стилі */
+  flex-direction: column;
+  justify-content: flex-start;     /* НІЯКОГО space-between */
+  align-items: stretch;
+  align-content: flex-start;
+  gap: 8px;
+  padding: 10px;
+  max-height: 68vh;
+  overflow-y: auto;
+}
+
+/* підчищаємо випадкові маржини від глобальних стилів */
+.thread > * { margin: 0 !important; }
+
+/* бульбашки — залишаємо компактними */
+.cs-msg{ max-width: 65%; width: fit-content; padding: 8px 10px; font-size: 13px; border-radius:12px; }
+.cs-msg--user{ align-self:flex-start; }
+.cs-msg--agent{ align-self:flex-end; }
+
     </style>
 </head>
 
@@ -215,7 +237,7 @@
     <div class="wrap">
         <!-- Список користувачів -->
         <aside class="side">
-            <h3>Розмови</h3>
+            <h3>Conversations</h3>
             <div id="conv-list" class="conv"></div>
         </aside>
 
@@ -223,90 +245,99 @@
         <section class="main">
             <div class="card thread" id="thread"></div>
             <div class="card composer">
-                <textarea id="msg" placeholder="Відповідь користувачу…"></textarea>
-                <button id="send">Надіслати</button>
+                <textarea id="msg" placeholder="Reply to user..."></textarea>
+                <button id="send">Send</button>
             </div>
         </section>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import {
-            getFirestore, collection, doc, addDoc, setDoc,
-            onSnapshot, query, orderBy, serverTimestamp
-        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+    
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+    import { getFirestore, collection, doc, addDoc, setDoc,
+             onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCfXt2YFfrTF0h0bxuh0uAL7VyC7waqTNOE",
-            authDomain: "cardsharp-chat.firebaseapp.com",
-            projectId: "cardsharp-chat",
-            storageBucket: "cardsharp-chat.firebasestorage.app",
-            messagingSenderId: "21085363631",
-            appId: "1:21085363631:web:f10be98af4dab37aefa75a",
-            measurementId: "G-FFNVQHSXHR"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    const firebaseConfig = {
+      apiKey: "AIzaSyCfXt2YFfrTF0h0bxuh0uAL7VyC7waqTNOE",
+      authDomain: "cardsharp-chat.firebaseapp.com",
+      projectId: "cardsharp-chat",
+      storageBucket: "cardsharp-chat.firebasestorage.app",
+      messagingSenderId: "21085363631",
+      appId: "1:21085363631:web:f10be98af4dab37aefa75a",
+      measurementId: "G-FFNVQHSXHR"
+    };
 
-        const convList = document.getElementById('conv-list');
-        const thread = document.getElementById('thread');
-        const msgEl = document.getElementById('msg');
-        const sendBtn = document.getElementById('send');
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-        let currentId = null;
-        let unsubThread = null;
+    const convList = document.getElementById('conv-list');
+    const thread   = document.getElementById('thread');
+    const msgEl    = document.getElementById('msg');
+    const sendBtn  = document.getElementById('send');
 
-        // Слухач списку розмов
-        const convQ = query(collection(db, 'conversations'), orderBy('lastAt', 'desc'));
-        onSnapshot(convQ, (snap) => {
-            convList.innerHTML = '';
-            snap.forEach(d => {
-                const c = d.data();
-                const el = document.createElement('div');
-                el.className = 'conv-item' + (d.id === currentId ? ' active' : '');
-                el.innerHTML = `<div class="name">${c.name || 'Гість'}</div><div class="last">${c.lastMessage || ''}</div>`;
-                el.onclick = () => selectConversation(d.id, c.name || 'Гість');
-                convList.appendChild(el);
-            });
+    let currentId = null;
+    let unsubThread = null;
+
+    // Conversations list
+    const convQ = query(collection(db,'conversations'), orderBy('lastAt','desc'));
+    onSnapshot(convQ, (snap) => {
+      convList.innerHTML = '';
+      snap.forEach(d => {
+        const c = d.data();
+        const el = document.createElement('div');
+        el.className = 'conv-item' + (d.id===currentId ? ' active':'');
+        el.innerHTML = `<div class="name">${c.name || 'Guest'}</div><div class="last">${c.lastMessage || ''}</div>`;
+        el.onclick = () => selectConversation(d.id, c.name || 'Guest');
+        convList.appendChild(el);
+      });
+    });
+
+    function selectConversation(id, name){
+      currentId = id;
+      if (unsubThread) { unsubThread(); unsubThread=null; }
+      thread.innerHTML = '';
+
+      const qMsgs = query(collection(doc(db,'conversations',id),'messages'), orderBy('createdAt','asc'));
+      unsubThread = onSnapshot(qMsgs, (snap) => {
+        thread.innerHTML = '';
+        snap.forEach(d => {
+          const m = d.data();
+          const b = document.createElement('div');
+          b.className = 'cs-msg ' + (m.role === 'agent' ? 'cs-msg--agent' : 'cs-msg--user');
+          b.textContent = m.text || '';
+          thread.appendChild(b);
         });
+        thread.scrollTop = thread.scrollHeight;
+      });
 
-        function selectConversation(id, name) {
-            currentId = id;
-            // відписка від попередньої
-            if (unsubThread) { unsubThread(); unsubThread = null; }
-            thread.innerHTML = '';
-            // підписка на повідомлення
-            const qMsgs = query(collection(doc(db, 'conversations', id), 'messages'), orderBy('createdAt', 'asc'));
-            unsubThread = onSnapshot(qMsgs, (snap) => {
-                thread.innerHTML = '';
-                snap.forEach(d => {
-                    const m = d.data();
-                    const b = document.createElement('div');
-                    b.className = 'cs-msg ' + (m.role === 'agent' ? 'cs-msg--agent' : 'cs-msg--user');
-                    b.textContent = m.text || '';
-                    thread.appendChild(b);
-                });
-                thread.scrollTop = thread.scrollHeight;
-            });
-            // підсвітка активного
-            [...convList.children].forEach(ch => ch.classList.remove('active'));
-            const match = [...convList.children].find(ch => ch.querySelector('.name')?.textContent === name);
-            if (match) match.classList.add('active');
-        }
+      [...convList.children].forEach(ch => ch.classList.remove('active'));
+      const match = [...convList.children].find(ch => ch.querySelector('.name')?.textContent===name);
+      if (match) match.classList.add('active');
+    }
 
-        // Надіслати як агент
-        sendBtn.addEventListener('click', async () => {
-            if (!currentId) return alert('Оберіть розмову у списку зліва');
-            const text = msgEl.value.trim();
-            if (!text) return;
-            const convRef = doc(db, 'conversations', currentId);
-            await addDoc(collection(convRef, 'messages'), {
-                role: 'agent', text, createdAt: serverTimestamp()
-            });
-            await setDoc(convRef, { lastMessage: text, lastAt: serverTimestamp() }, { merge: true });
-            msgEl.value = '';
-        });
-    </script>
+    // Send message
+    sendBtn.addEventListener('click', sendMessage);
+    msgEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    async function sendMessage() {
+      if(!currentId) return alert('Select a conversation first');
+      const text = msgEl.value.trim();
+      if(!text) return;
+      const convRef = doc(db,'conversations',currentId);
+      await addDoc(collection(convRef,'messages'), {
+        role:'agent', text, createdAt: serverTimestamp()
+      });
+      await setDoc(convRef, { lastMessage: text, lastAt: serverTimestamp() }, { merge:true });
+      msgEl.value = '';
+    }
+  </script>
+</body>
+</html>
 </body>
 
 </html>
