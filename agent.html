@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="uk">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Support – Agent Console</title>
+    <style>
+        :root {
+            --bg: #0b0b10;
+            --card: rgba(255, 255, 255, .04);
+            --brd: rgba(255, 255, 255, .08);
+            --txt: #e8e8f0;
+            --sub: #a1a1b3;
+            --g1: #ff4ecd;
+            --g2: #6a8cff;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--txt);
+            font: 14px/1.4 system-ui, Segoe UI, Roboto, sans-serif
+        }
+
+        .wrap {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh
+        }
+
+        .side {
+            border-right: 1px solid var(--brd);
+            padding: 14px;
+            background: rgba(255, 255, 255, .02)
+        }
+
+        .main {
+            padding: 16px;
+            display: grid;
+            grid-template-rows: 1fr auto;
+            gap: 10px
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--brd);
+            border-radius: 14px;
+            overflow: hidden
+        }
+
+        .conv {
+            display: grid;
+            gap: 8px;
+        }
+
+        .conv-item {
+            padding: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 1px solid transparent
+        }
+
+        .conv-item:hover {
+            background: rgba(255, 255, 255, .05);
+            border-color: var(--brd)
+        }
+
+        .conv-item.active {
+            background: linear-gradient(135deg, rgba(255, 78, 205, .14), rgba(106, 140, 255, .12));
+            border-color: var(--brd)
+        }
+
+        .name {
+            font-weight: 700
+        }
+
+        .last {
+            color: var(--sub);
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .thread {
+            padding: 12px;
+            display: grid;
+            gap: 8px;
+            max-height: 70vh;
+            overflow: auto
+        }
+
+        .bubble {
+            max-width: 72%;
+            padding: 10px 12px;
+            border-radius: 14px;
+            border: 1px solid var(--brd)
+        }
+
+        .bubble.user {
+            justify-self: end;
+            background: rgba(106, 140, 255, .16)
+        }
+
+        .bubble.agent {
+            justify-self: start;
+            background: rgba(255, 255, 255, .06)
+        }
+
+        .composer {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            padding: 12px
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid var(--brd);
+            background: rgba(255, 255, 255, .06);
+            color: var(--txt)
+        }
+
+        button {
+            border: none;
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: #fff;
+            cursor: pointer;
+
+            .wrap {
+                grid-template-columns: 220px 1fr;
+            }
+
+            .side {
+                padding: 10px;
+            }
+
+            .main {
+                padding: 12px;
+                gap: 8px;
+            }
+
+            .conv-item {
+                padding: 8px 10px;
+                border-radius: 10px;
+            }
+
+            .thread {
+                padding: 10px;
+                gap: 6px;
+                max-height: 68vh;
+            }
+
+            .composer {
+                grid-template-columns: 1fr auto;
+                gap: 8px;
+                padding: 10px;
+            }
+
+            textarea {
+                min-height: 54px;
+                font-size: 13px;
+            }
+
+            button {
+                padding: 8px 12px;
+            }
+
+            background:linear-gradient(135deg, var(--g1), var(--g2))
+        }
+
+        /* компактні скляні бульбашки */
+        .cs-msg {
+            max-width: 65%;
+            width: fit-content;
+            display: inline-block;
+            padding: 8px 10px;
+            font-size: 13px;
+            line-height: 1.35;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .07);
+            backdrop-filter: blur(10px) saturate(160%);
+            -webkit-backdrop-filter: blur(10px) saturate(160%);
+            color: #e8e8f0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, .18);
+        }
+
+        .cs-msg--user {
+            align-self: flex-start;
+            background: linear-gradient(135deg, rgba(170, 90, 255, .14), rgba(255, 80, 180, .12));
+            border-bottom-left-radius: 6px;
+        }
+
+        .cs-msg--agent {
+            align-self: flex-end;
+            background: linear-gradient(135deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .04));
+            border-bottom-right-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <!-- Список користувачів -->
+        <aside class="side">
+            <h3>Розмови</h3>
+            <div id="conv-list" class="conv"></div>
+        </aside>
+
+        <!-- Поточний діалог -->
+        <section class="main">
+            <div class="card thread" id="thread"></div>
+            <div class="card composer">
+                <textarea id="msg" placeholder="Відповідь користувачу…"></textarea>
+                <button id="send">Надіслати</button>
+            </div>
+        </section>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import {
+            getFirestore, collection, doc, addDoc, setDoc,
+            onSnapshot, query, orderBy, serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfXt2YFfrTF0h0bxuh0uAL7VyC7waqTNOE",
+            authDomain: "cardsharp-chat.firebaseapp.com",
+            projectId: "cardsharp-chat",
+            storageBucket: "cardsharp-chat.firebasestorage.app",
+            messagingSenderId: "21085363631",
+            appId: "1:21085363631:web:f10be98af4dab37aefa75a",
+            measurementId: "G-FFNVQHSXHR"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const convList = document.getElementById('conv-list');
+        const thread = document.getElementById('thread');
+        const msgEl = document.getElementById('msg');
+        const sendBtn = document.getElementById('send');
+
+        let currentId = null;
+        let unsubThread = null;
+
+        // Слухач списку розмов
+        const convQ = query(collection(db, 'conversations'), orderBy('lastAt', 'desc'));
+        onSnapshot(convQ, (snap) => {
+            convList.innerHTML = '';
+            snap.forEach(d => {
+                const c = d.data();
+                const el = document.createElement('div');
+                el.className = 'conv-item' + (d.id === currentId ? ' active' : '');
+                el.innerHTML = `<div class="name">${c.name || 'Гість'}</div><div class="last">${c.lastMessage || ''}</div>`;
+                el.onclick = () => selectConversation(d.id, c.name || 'Гість');
+                convList.appendChild(el);
+            });
+        });
+
+        function selectConversation(id, name) {
+            currentId = id;
+            // відписка від попередньої
+            if (unsubThread) { unsubThread(); unsubThread = null; }
+            thread.innerHTML = '';
+            // підписка на повідомлення
+            const qMsgs = query(collection(doc(db, 'conversations', id), 'messages'), orderBy('createdAt', 'asc'));
+            unsubThread = onSnapshot(qMsgs, (snap) => {
+                thread.innerHTML = '';
+                snap.forEach(d => {
+                    const m = d.data();
+                    const b = document.createElement('div');
+                    b.className = 'cs-msg ' + (m.role === 'agent' ? 'cs-msg--agent' : 'cs-msg--user');
+                    b.textContent = m.text || '';
+                    thread.appendChild(b);
+                });
+                thread.scrollTop = thread.scrollHeight;
+            });
+            // підсвітка активного
+            [...convList.children].forEach(ch => ch.classList.remove('active'));
+            const match = [...convList.children].find(ch => ch.querySelector('.name')?.textContent === name);
+            if (match) match.classList.add('active');
+        }
+
+        // Надіслати як агент
+        sendBtn.addEventListener('click', async () => {
+            if (!currentId) return alert('Оберіть розмову у списку зліва');
+            const text = msgEl.value.trim();
+            if (!text) return;
+            const convRef = doc(db, 'conversations', currentId);
+            await addDoc(collection(convRef, 'messages'), {
+                role: 'agent', text, createdAt: serverTimestamp()
+            });
+            await setDoc(convRef, { lastMessage: text, lastAt: serverTimestamp() }, { merge: true });
+            msgEl.value = '';
+        });
+    </script>
+</body>
+
+</html>

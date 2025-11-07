@@ -233,6 +233,41 @@
 
     <script src="https://unpkg.com/feather-icons"></script>
     <script src="index.js"></script>
+
+<!-- Chat trigger -->
+<button id="chat-btn" class="chat-button" aria-label="Open chat">
+  <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M2 12c0-5 4.5-9 10-9s10 4 10 9-4.5 9-10 9c-1.1 0-2.2-.17-3.2-.5-.4-.13-.85-.03-1.17.25L4.1 22a.9.9 0 0 1-1.44-.73l.05-2.97c.01-.42-.2-.82-.56-1.06A8.7 8.7 0 0 1 2 12z"/></svg>
+</button>
+
+<!-- Chat window -->
+<div id="chat-box" class="chat-box" role="dialog" aria-label="Support chat">
+  <div class="chat-header">
+    <div class="chat-title">Support</div>
+    <button class="chat-close" aria-label="Close" onclick="document.getElementById('chat-box').classList.remove('open')">✕</button>
+  </div>
+
+  <!-- Модалка для імені (показується 1 раз, поки не збережено ім'я) -->
+  <div id="chat-auth" class="chat-auth" hidden>
+    <div class="auth-card">
+      <h4>What's your name?</h4>
+      <input id="auth-name" placeholder="Твоє ім’я" />
+      <button id="auth-save">Start chat</button>
+    </div>
+  </div>
+
+  <div id="chat-messages" class="chat-messages"></div>
+
+  <div class="chat-input">
+    <input id="chat-input" placeholder="Напиши повідомлення…" />
+    <button id="chat-send" aria-label="Send">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<script type="module" src="chat.js"></script>
+
+
 </body>
 
 </html>
