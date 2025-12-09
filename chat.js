@@ -11,7 +11,7 @@ const inputEl = document.getElementById('chat-input');
 const sendBtn = document.getElementById('chat-send');
 
 const authBox = document.getElementById('chat-auth');
-const nameInput = document.getElementById('chat-name');
+const nameInput = document.getElementById('auth-name');
 const authSave = document.getElementById('auth-save');
 
 let username = localStorage.getItem('chatName') || '';
