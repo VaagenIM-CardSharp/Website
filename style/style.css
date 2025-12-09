@@ -864,3 +864,32 @@ body {
   transition: all 0.35s ease;
 }
 
+
+.chat-messages {
+  max-height: 260px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.chat-bubble {
+  align-self: flex-start;
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 16px;
+  background: #5b1fa6;
+  color: #fff;
+  font-size: 14px;
+}
+
+.chat-bubble--me {
+  align-self: flex-end;
+  background: #ff4bcb;
+}
+
+
+.chat-bubble--admin {
+  align-self: flex-start;
+  background: #ffb800;
+}

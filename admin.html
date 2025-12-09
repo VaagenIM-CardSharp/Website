@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin chat – CardSharp</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Socket.IO client -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"
+          integrity="sha384-eSLkq+cuZkQ78y7dVxQOmv0n5IFN8K7P0S16ZIk//3px9H1yjO0C6z1qrl6NnVQW"
+          crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --bg-main: #05050b;
+      --bg-panel: #0d0d16;
+      --bg-panel-light: #151524;
+      --accent: #f25cff;
+      --accent-soft: #7030ff;
+      --text-main: #f8f5ff;
+      --text-muted: #a3a3c2;
+      --border-subtle: #26263b;
+      --radius-lg: 16px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.75);
+      --transition: 0.2s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #181824 0, #05050b 55%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .admin-shell {
+      width: 100%;
+      max-width: 1400px;
+      height: calc(100vh - 48px);
+      background: linear-gradient(135deg, #090912, #05050b);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Left – conversations list */
+    .sidebar {
+      width: 260px;
+      background: radial-gradient(circle at top left, #19192a 0, #090914 55%);
+      border-right: 1px solid var(--border-subtle);
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sidebar-header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar-title {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .sidebar-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .conversations {
+      margin-top: 8px;
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .conversation {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 14px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .conversation:hover {
+      border-color: rgba(242, 92, 255, 0.45);
+      background: radial-gradient(circle at left, rgba(242, 92, 255, 0.12), transparent);
+    }
+
+    .conversation.active {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(242, 92, 255, 0.14), rgba(112, 48, 255, 0.22));
+    }
+
+    .conversation-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .conversation-preview {
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Main panel */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: radial-gradient(circle at top, #131321 0, #05050b 60%);
+    }
+
+    .main-header {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .user-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .user-name {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .user-status {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #42ff89;
+      box-shadow: 0 0 8px rgba(66, 255, 137, 0.8);
+      margin-right: 6px;
+      display: inline-block;
+    }
+
+    .main-header-right {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Messages */
+    .messages {
+      flex: 1;
+      padding: 16px 26px 10px;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .bubble {
+      max-width: 40%;
+      padding: 8px 14px;
+      border-radius: 18px;
+      font-size: 13px;
+      background: linear-gradient(135deg, #281332, #4c1b7b);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.55);
+      margin-bottom: 10px;
+      word-wrap: break-word;
+      position: relative;
+    }
+
+    .bubble.client {
+      background: linear-gradient(135deg, #2a1535, #6220aa);
+      align-self: flex-start;
+    }
+
+    .bubble.admin {
+      background: linear-gradient(135deg, #f25cff, #ff7bd5);
+      color: #1b0b23;
+      align-self: flex-end;
+    }
+
+    .bubble-time {
+      font-size: 10px;
+      opacity: 0.7;
+      margin-top: 2px;
+      text-align: right;
+    }
+
+    .messages-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .messages-empty {
+      color: var(--text-muted);
+      font-size: 14px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.55;
+    }
+
+    /* Input */
+    .input-bar {
+      border-top: 1px solid var(--border-subtle);
+      padding: 12px 20px 16px;
+      background: rgba(7, 7, 12, 0.96);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .input-bar input {
+      flex: 1;
+      padding: 12px 14px;
+      background: #0d0d19;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      outline: none;
+      color: var(--text-main);
+      font-size: 14px;
+      transition: var(--transition);
+    }
+
+    .input-bar input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(242, 92, 255, 0.35);
+    }
+
+    .btn-send {
+      padding: 11px 22px;
+      border-radius: var(--radius-pill);
+      border: none;
+      outline: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, #f25cff, #7030ff);
+      color: #0b0610;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 25px rgba(112, 48, 255, 0.6);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-send:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 30px rgba(112, 48, 255, 0.8);
+    }
+
+    .btn-send:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 6px 18px rgba(112, 48, 255, 0.7);
+    }
+
+    .btn-send svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    @media (max-width: 980px) {
+      .admin-shell {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .conversations {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+      }
+
+      .conversation {
+        min-width: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-shell">
+    <!-- Left: conversations -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">Conversations</div>
+        <div class="sidebar-sub">Choose a user to reply</div>
+      </div>
+      <div class="conversations" id="conversations"></div>
+    </aside>
+
+    <!-- Right: main chat -->
+    <main class="main">
+      <header class="main-header">
+        <div class="user-title">
+          <div class="user-name" id="activeUserName">No user selected</div>
+          <div class="user-status">
+            <span class="status-dot"></span>
+            Waiting for new messages…
+          </div>
+        </div>
+        <div class="main-header-right" id="connectionStatus">
+          Connecting to server…
+        </div>
+      </header>
+
+      <section class="messages" id="messages">
+        <div class="messages-empty" id="emptyState">
+          No messages yet. When a client writes from the website, the chat will appear here.
+        </div>
+        <div class="messages-inner" id="messagesInner"></div>
+      </section>
+
+      <footer class="input-bar">
+        <input
+          id="replyInput"
+          type="text"
+          placeholder="Reply to user…"
+          autocomplete="off"
+        />
+        <button class="btn-send" id="replySend">
+          <span>Send</span>
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M4 4.75L19.25 12L4 19.25L5.5 12L4 4.75Z"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // ---------- CONFIG ----------
+    const SOCKET_URL = "http://10.0.0.53:3000"; // змінити, якщо інша IP
+
+    // ---------- STATE ----------
+    const conversations = new Map(); // userName -> [{ text, role, time }]
+    let activeUser = null;
+
+    // ---------- DOM ----------
+    const convListEl = document.getElementById("conversations");
+    const messagesInnerEl = document.getElementById("messagesInner");
+    const emptyStateEl = document.getElementById("emptyState");
+    const activeUserNameEl = document.getElementById("activeUserName");
+    const statusEl = document.getElementById("connectionStatus");
+    const replyInputEl = document.getElementById("replyInput");
+    const replySendBtn = document.getElementById("replySend");
+
+    // ---------- SOCKET ----------
+    const socket = io(SOCKET_URL, {
+      query: { role: "admin" },
+      transports: ["websocket", "polling"],
+    });
+
+    socket.on("connect", () => {
+      statusEl.textContent = "Connected as admin • " + socket.id;
+    });
+
+    socket.on("disconnect", () => {
+      statusEl.textContent = "Disconnected. Trying to reconnect…";
+    });
+
+    /**
+     * Очікуємо, що сервер шле повідомлення формату:
+     * { user: 'Vika', text: 'hello', role: 'client' | 'admin', time: '2025-12-08T10:54:32.000Z' }
+     */
+    socket.on("chat message", (msg) => {
+      const { user, text, role, time } = msg;
+      if (!user || !text) return;
+
+      const list = conversations.get(user) || [];
+      list.push({ text, role, time });
+      conversations.set(user, list);
+
+      renderConversationList();
+      if (!activeUser) {
+        setActiveUser(user);
+      } else if (activeUser === user) {
+        renderMessagesForUser(user);
+      }
+    });
+
+    // ---------- UI HELPERS ----------
+
+    function renderConversationList() {
+      convListEl.innerHTML = "";
+      if (conversations.size === 0) return;
+
+      for (const [user, msgs] of conversations.entries()) {
+        const lastMsg = msgs[msgs.length - 1];
+
+        const item = document.createElement("div");
+        item.className = "conversation" + (activeUser === user ? " active" : "");
+        item.dataset.user = user;
+
+        const nameEl = document.createElement("div");
+        nameEl.className = "conversation-name";
+        nameEl.textContent = user;
+
+        const previewEl = document.createElement("div");
+        previewEl.className = "conversation-preview";
+        previewEl.textContent = lastMsg.text;
+
+        item.appendChild(nameEl);
+        item.appendChild(previewEl);
+
+        item.addEventListener("click", () => {
+          setActiveUser(user);
+        });
+
+        convListEl.appendChild(item);
+      }
+    }
+
+    function setActiveUser(user) {
+      activeUser = user;
+      activeUserNameEl.textContent = user || "No user selected";
+      renderConversationList();
+      renderMessagesForUser(user);
+    }
+
+    function renderMessagesForUser(user) {
+      messagesInnerEl.innerHTML = "";
+
+      const list = conversations.get(user) || [];
+      if (list.length === 0) {
+        emptyStateEl.style.display = "block";
+        return;
+      }
+      emptyStateEl.style.display = "none";
+
+      list.forEach((m) => {
+        const wrap = document.createElement("div");
+        wrap.className = "bubble " + (m.role === "admin" ? "admin" : "client");
+        wrap.innerHTML =
+          `<div>${escapeHtml(m.text)}</div>` +
+          `<div class="bubble-time">${formatTime(m.time)}</div>`;
+        messagesInnerEl.appendChild(wrap);
+      });
+
+      // проскролити вниз
+      messagesInnerEl.parentElement.scrollTop =
+        messagesInnerEl.parentElement.scrollHeight;
+    }
+
+    function formatTime(iso) {
+      if (!iso) return "";
+      const d = new Date(iso);
+      return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    // ---------- SEND MESSAGE FROM ADMIN ----------
+
+    function sendReply() {
+      const text = replyInputEl.value.trim();
+      if (!text || !activeUser) return;
+
+      const msg = {
+        user: activeUser,     // до кого
+        text,
+        role: "admin",
+        time: new Date().toISOString(),
+      };
+
+      // додаємо в UI одразу
+      const list = conversations.get(activeUser) || [];
+      list.push(msg);
+      conversations.set(activeUser, list);
+      renderMessagesForUser(activeUser);
+      renderConversationList();
+
+      // шлемо на сервер
+      socket.emit("chat message", msg);
+      replyInputEl.value = "";
+    }
+
+    replySendBtn.addEventListener("click", sendReply);
+    replyInputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendReply();
+      }
+    });
+  </script>
+</body>
+</html>
