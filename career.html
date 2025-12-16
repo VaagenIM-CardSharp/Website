@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Careers – CardSharp</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style/career.css">
+</head>
+
+
+<body>
+  <div class="career-shell">
+    <!-- LEFT: info -->
+    <section class="career-info">
+      <div class="career-tag">Careers at CardSharp</div>
+      <h1 class="career-title">
+        Join the <span class="career-gradient">CardSharp</span> team.
+      </h1>
+      <p class="career-subtitle">
+        We build secure, high-performance web solutions for modern brands.
+        Tell us who you are, and we&apos;ll reach out if there&apos;s a match.
+      </p>
+
+      <ul class="perks-list">
+        <li class="perk">
+          <span class="perk-dot"></span>
+          Real client projects
+        </li>
+        <li class="perk">
+          <span class="perk-dot"></span>
+          Modern tech stack
+        </li>
+        <li class="perk">
+          <span class="perk-dot"></span>
+          Flexible work style
+        </li>
+        <li class="perk">
+          <span class="perk-dot"></span>
+          Focus on security
+        </li>
+      </ul>
+
+      <p class="career-footer">
+        Already contacted us?  
+        <br />
+        You can always reach support via the main <a href="Website/#contact">contact section</a>.
+      </p>
+    </section>
+
+    <!-- RIGHT: form -->
+    <section class="career-form">
+      <div>
+        <div class="form-title">Send us your application</div>
+        <div class="form-subtitle">
+          Fill in the fields below. Fields marked with <span style="color:var(--accent)">*</span> are required.
+        </div>
+      </div>
+
+      <form action="http://10.0.0.53:3000/api/career" method="post">
+        <div class="field">
+          <div class="field-label">Full name <span>*</span></div>
+          <input
+            type="text"
+            name="name"
+            placeholder="Your name"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <div class="field-label">Email <span>*</span></div>
+          <input
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <div class="field-label">Role you&apos;re interested in <span>*</span></div>
+          <input
+            type="text"
+            name="role"
+            placeholder="e.g. Frontend developer, IT support"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <div class="field-label">Tell us about your experience <span>*</span></div>
+          <textarea
+            name="message"
+            placeholder="Short motivation and experience…"
+            required
+          ></textarea>
+        </div>
+
+        <div class="btn-row">
+          <button type="submit" class="btn-primary">
+            <span>Send application</span>
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M4 4.75L19.25 12L4 19.25L5.5 12L4 4.75Z"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <div class="helper-text">
+            We usually review applications within 3–5 working days.
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+  const form = document.getElementById('career-form');
+  const statusEl = document.getElementById('career-status');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // 1. Зчитуємо значення з полів
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const role = document.getElementById('role').value.trim();
+    const message = document.getElementById('message').value.trim();
+
+    // 2. Проста перевірка на фронті (щоб красиво показати помилку)
+    if (!name || !email || !role || !message) {
+      statusEl.textContent = 'Please fill in all fields.';
+      statusEl.style.color = '#ff7b7b';
+      return;
+    }
+
+    // 3. Готуємо дані
+    const data = { name, email, role, message };
+
+    try {
+      statusEl.textContent = 'Sending...';
+      statusEl.style.color = '#a3a3c2';
+
+      const res = await fetch('http://10.0.0.53:3000/api/careers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        // 4. Якщо все ок – показуємо повідомлення
+        statusEl.textContent = 'Application received! We will contact you.';
+        statusEl.style.color = '#42ff89';
+        form.reset();
+      } else {
+        const body = await res.json().catch(() => ({}));
+        statusEl.textContent = body.message || 'Something went wrong. Try again.';
+        statusEl.style.color = '#ff7b7b';
+      }
+    } catch (err) {
+      console.error(err);
+      statusEl.textContent = 'Could not reach the server.';
+      statusEl.style.color = '#ff7b7b';
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,81 +1,96 @@
-// chat.js
-import { io } from 'https://cdn.socket.io/4.8.1/socket.io.esm.min.js';
+// chat-client.js
 
-// КЛІЄНТ підключається без role => role = 'client'
-const socket = io('http://10.0.0.53:3000');
+let socket = null;
+let userName = '';
+const SERVER_URL = 'http://10.0.0.53:3000'; // твій Node-сервер
 
-const chatBtn = document.getElementById('chat-btn');
-const chatBox = document.getElementById('chat-box');
-const messagesEl = document.getElementById('chat-messages');
-const inputEl = document.getElementById('chat-input');
-const sendBtn = document.getElementById('chat-send');
+// чекаємо доки DOM завантажиться
+document.addEventListener('DOMContentLoaded', () => {
+  const authCard   = document.getElementById('chat-auth');
+  const authInput  = document.getElementById('auth-name');
+  const authSave   = document.getElementById('auth-save');
+  const messagesEl = document.getElementById('chat-messages');
+  const inputEl    = document.getElementById('chat-input');
+  const sendBtn    = document.getElementById('chat-send');
 
-const authBox = document.getElementById('chat-auth');
-const nameInput = document.getElementById('auth-name');
-const authSave = document.getElementById('auth-save');
+  // натиснули "Start chat"
+  authSave.addEventListener('click', () => {
+    const name = authInput.value.trim();
+    if (!name) return;
 
-let username = localStorage.getItem('chatName') || '';
+    userName = name;
+    authCard.hidden = true;           // ховаємо картку з ім'ям
+    ensureSocket();                   // підключаємось до сокета
+  });
 
-chatBtn.addEventListener('click', () => {
-  chatBox.classList.add('open');
-  if (!username) {
-    authBox.hidden = false;
-  }
-});
+  // відправка повідомлення
+  function sendMessage() {
+    const text = inputEl.value.trim();
+    if (!text || !socket || !userName) return;
 
-authSave.addEventListener('click', () => {
-  const name = nameInput.value.trim();
-  if (!name) return;
-  username = name;
-  localStorage.setItem('chatName', username);
-  authBox.hidden = true;
-});
+    socket.emit('chat message', {
+      text,
+      name: userName          // ім'я клієнта – сервер просто прокине далі
+    });
 
-function addMessage(msg, fromSelf = false) {
-  const bubble = document.createElement('div');
-  bubble.className = 'chat-bubble';
-
-  if (msg.role === 'admin') {
-    bubble.classList.add('chat-bubble--admin');
-  } else if (fromSelf) {
-    bubble.classList.add('chat-bubble--me');
+    inputEl.value = '';
   }
 
-  const label = msg.role === 'admin'
-    ? 'Support'
-    : msg.sender || 'Client';
+  sendBtn.addEventListener('click', sendMessage);
+  inputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
 
-  bubble.textContent = `${label}: ${msg.text}`;
-  messagesEl.appendChild(bubble);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
-}
+  // функція, яка точно створює підключення тільки один раз
+  function ensureSocket() {
+    if (socket) return;
 
-function sendMessage() {
-  if (!username) {
-    authBox.hidden = false;
-    return;
+    try {
+      socket = io(SERVER_URL, {
+        query: { role: 'client', name: userName },
+        transports: ['websocket', 'polling']
+      });
+
+      socket.on('connect', () => {
+        console.log('Client socket connected:', socket.id);
+      });
+
+      // отримали повідомлення з сервера
+      socket.on('chat message', (msg) => {
+        // msg: { text, name, role, time }
+        addMessage(msg, msg.role === 'admin' ? 'admin' : 'client');
+      });
+
+      socket.on('disconnect', () => {
+        console.log('Client socket disconnected');
+      });
+
+    } catch (err) {
+      console.error('Socket.IO error:', err);
+    }
   }
 
-  const text = inputEl.value.trim();
-  if (!text) return;
+  // малюємо одну «бульку» в чаті
+  function addMessage(msg, who) {
+    const wrapper = document.createElement('div');
+    wrapper.className = `chat-msg chat-msg--${who}`;
 
-  const msg = { sender: username, text };
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-msg__bubble';
+    bubble.textContent = msg.text || '';
 
-  // свій месседж покажемо після відповіді сервера (fullMsg)
-  socket.emit('chat message', msg);
-  inputEl.value = '';
-}
+    const meta = document.createElement('div');
+    meta.className = 'chat-msg__meta';
+    const time = msg.time ? new Date(msg.time) : new Date();
+    meta.textContent = `${msg.name || ''} • ${time.toLocaleTimeString()}`;
 
-sendBtn.addEventListener('click', sendMessage);
-inputEl.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    sendMessage();
+    wrapper.appendChild(bubble);
+    wrapper.appendChild(meta);
+
+    messagesEl.appendChild(wrapper);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
   }
-});
-
-// сервер завжди шле fullMsg з role
-socket.on('chat message', (msg) => {
-  const fromSelf = (msg.sender === username && msg.role === 'client');
-  addMessage(msg, fromSelf);
 });

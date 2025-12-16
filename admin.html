@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Admin chat – CardSharp</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Socket.IO client -->
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"
-          integrity="sha384-eSLkq+cuZkQ78y7dVxQOmv0n5IFN8K7P0S16ZIk//3px9H1yjO0C6z1qrl6NnVQW"
-          crossorigin="anonymous"></script>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js" crossorigin="anonymous"></script>
+
 
   <style>
     :root {
@@ -315,6 +315,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="admin-shell">
     <!-- Left: conversations -->
@@ -349,21 +350,12 @@
       </section>
 
       <footer class="input-bar">
-        <input
-          id="replyInput"
-          type="text"
-          placeholder="Reply to user…"
-          autocomplete="off"
-        />
+        <input id="replyInput" type="text" placeholder="Reply to user…" autocomplete="off" />
         <button class="btn-send" id="replySend">
           <span>Send</span>
           <svg viewBox="0 0 24 24" fill="none">
-            <path
-              d="M4 4.75L19.25 12L4 19.25L5.5 12L4 4.75Z"
-              stroke="currentColor"
-              stroke-width="1.6"
-              stroke-linejoin="round"
-            />
+            <path d="M4 4.75L19.25 12L4 19.25L5.5 12L4 4.75Z" stroke="currentColor" stroke-width="1.6"
+              stroke-linejoin="round" />
           </svg>
         </button>
       </footer>
@@ -389,9 +381,10 @@
 
     // ---------- SOCKET ----------
     const socket = io(SOCKET_URL, {
-      query: { role: "admin" },
+      query: { role: "admin", name: "Admin" },   // <-- name піде в server.js
       transports: ["websocket", "polling"],
     });
+
 
     socket.on("connect", () => {
       statusEl.textContent = "Connected as admin • " + socket.id;
@@ -405,12 +398,17 @@
      * Очікуємо, що сервер шле повідомлення формату:
      * { user: 'Vika', text: 'hello', role: 'client' | 'admin', time: '2025-12-08T10:54:32.000Z' }
      */
+    // Сервер шле: { text, name, role, time }
     socket.on("chat message", (msg) => {
-      const { user, text, role, time } = msg;
+      const user = msg.name || msg.user;   // name приходить з сервера
+      const text = msg.text;
+      const role = msg.role || "client";
+      const time = msg.time || new Date().toISOString();
+
       if (!user || !text) return;
 
       const list = conversations.get(user) || [];
-      list.push({ text, role, time });
+      list.push({ text, role, time });     // у стані зберігаємо тільки те, що потрібно
       conversations.set(user, list);
 
       renderConversationList();
@@ -420,6 +418,7 @@
         renderMessagesForUser(user);
       }
     });
+
 
     // ---------- UI HELPERS ----------
 
@@ -503,24 +502,29 @@
       const text = replyInputEl.value.trim();
       if (!text || !activeUser) return;
 
-      const msg = {
-        user: activeUser,     // до кого
+      // 1) відправляємо в тому форматі, який чекає server.js
+      socket.emit("chat message", {
+        text,
+        name: activeUser,              // ім’я користувача, якому відповідаємо
+      });
+
+      // 2) одразу малюємо це в нашому UI
+      const localMsg = {
         text,
         role: "admin",
         time: new Date().toISOString(),
       };
 
-      // додаємо в UI одразу
       const list = conversations.get(activeUser) || [];
-      list.push(msg);
+      list.push(localMsg);
       conversations.set(activeUser, list);
+
       renderMessagesForUser(activeUser);
       renderConversationList();
 
-      // шлемо на сервер
-      socket.emit("chat message", msg);
       replyInputEl.value = "";
     }
+
 
     replySendBtn.addEventListener("click", sendReply);
     replyInputEl.addEventListener("keydown", (e) => {
@@ -531,4 +535,5 @@
     });
   </script>
 </body>
+
 </html>
