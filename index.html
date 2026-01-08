@@ -27,7 +27,7 @@
                 <a href="#services">Services</a>
                 <a href="work.html">Case Studies</a>
                 <a href="company.html">Company</a>
-                <a href="career.html">Career</a>
+                <a href="career.html" target="_blank">Career</a>
                 <a href="brukerstotte.html">Help</a>
                 <a href="contact.html">Contact</a>
                 <span class="nav__indicator" aria-hidden="true"></span>
@@ -234,54 +234,16 @@
             <div class="footer__links"><a href="#">Privacy</a><a href="#">Terms</a></div>
         </div>
     </footer>
-
-
-
-    <!-- Chat trigger -->
-    <button id="chat-btn" class="chat-button" aria-label="Open chat">
-        <svg viewBox="0 0 24 24" width="22" height="22">
-            <path fill="currentColor"
-                d="M2 12c0-5 4.5-9 10-9s10 4 10 9-4.5 9-10 9c-1.1 0-2.2-.17-3.2-.5-.4-.13-.85-.03-1.17.25L4.1 22a.9.9 0 0 1-1.44-.73l.05-2.97c.01-.42-.2-.82-.56-1.06A8.7 8.7 0 0 1 2 12z" />
-        </svg>
-    </button>
-
-    <!-- Chat window -->
-    <div id="chat-box" class="chat-box" role="dialog" aria-label="Support chat">
-        <div class="chat-header">
-            <div class="chat-title">Support</div>
-            <button class="chat-close" aria-label="Close"
-                onclick="document.getElementById('chat-box').classList.remove('open')">✕</button>
-        </div>
-
-        <!-- Модалка з імʼям -->
-        <div id="chat-auth" class="chat-auth">
-            <div class="auth-card">
-                <h4>What's your name?</h4>
-                <input id="auth-name" placeholder="Your name" />
-                <button id="auth-save">Start chat</button>
-            </div>
-        </div>
-
-        <!-- Повідомлення -->
-        <div id="chat-messages" class="chat-messages"></div>
-
-        <!-- Поле вводу -->
-        <div class="chat-input">
-            <input id="chat-input" placeholder="Type your message..." disabled />
-            <button id="chat-send" aria-label="Send" disabled>➤</button>
         </div>
     </div>
     </div>
 
 
-    <!-- socket.io з CDN, БЕЗ integrity -->
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
+
 
 <!-- твій основний JS для сайту, де бургер і т.д. -->
 <script src="index.js"></script>
 
-<!-- окремий файл тільки для чату -->
-<script src="chat.js"></script>
 
     <script src="https://unpkg.com/feather-icons"></script>
 
